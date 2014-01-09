@@ -5,4 +5,16 @@ FMx163
 :Date: 2014-01-09
 
 一个简单的Chrome插件来帮助你轻松享受320k的豆瓣FM。
-安装release下的crx文件之后打开douban.fm即可。
+
+这么牛逼？怎么做到的？
+----------------------
+
+其实原理弱智到我都不好意思告诉你，只是在播放豆瓣FM的同时开了一个网易云音乐的tab来同步
+播放豆瓣FM的歌曲而已。四个字：**简单粗暴**
+
+我要怎么用上呢？
+----------------
+
+安装releases目录下的最新版本crx文件之后打开douban.fm即可。
+
+最新CRX地址: https://github.com/piglei/fmx163/raw/master/releases/0.0.1/fmx163.crx
