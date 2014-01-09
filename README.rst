@@ -16,3 +16,5 @@ FMx163
 ----------------
 
 安装releases目录下的最新版本crx文件之后打开douban.fm即可。
+
+最新CRX地址: https://github.com/piglei/fmx163/raw/master/releases/0.0.1/fmx163.crx
