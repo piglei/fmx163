@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "FMx163",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "FMx163: 轻松享受320k的豆瓣FM",
     "permissions": [
         "tabs",
@@ -15,7 +15,7 @@
     "content_scripts": [{
         "css": ["main.css"],
         "js": ["jquery-2.0.3.min.js", "c_fm.js"],
-        "matches": ["http://douban.fm/*"]
+        "matches": ["http://douban.fm/", "http://douban.fm/?*"]
     }, {
         "js": ["jquery-2.0.3.min.js", "jquery.waituntilexists.js", "c_163.js"],
         "matches": ["http://music.163.com/search/*"],

@@ -30,10 +30,18 @@
             play_new_song(e.detail);
         });
 
-        $("#fm-section").append('<div class="fmx163-tip fmx163-volumn-tip">请手动关闭豆瓣FM的音量，不然会出现"二重唱"哦 ↑</div>');
+        $("#fm-section").append('<div class="fmx163-tip fmx163-volumn-tip">请手动关闭豆瓣FM的<strong>音量</strong>，不然会出现"二重唱"哦 ' + 
+                                '<a href="javascript:">我知道了</a>' +
+                                '<div class="arrow-up"></div></div>');
         $("#fm-section").append('<div class="fmx163-tip fmx163-about">"FMx163"使用网易云音乐来同步播放豆瓣FM的所有歌曲，仅供学习交流使用<br>' +
                                  '如需关闭，请在Chrome插件管理页面禁用或卸载"FMx163"插件<br/>' + 
                                  'Github：<a href="https://github.com/piglei/fmx163" target="_blank">https://github.com/piglei/fmx163</a><br/>' +
                                  '作者：<a href="mailto: piglei2007@gmail.com">piglei2007@gmail.com</a></div>');
+
+        // Blink once and bind click function
+        setTimeout(function(){
+            $('.fmx163-volumn-tip').fadeOut(1000, function(){$(this).fadeIn()});
+        }, 2000);
+        $('.fmx163-volumn-tip a').bind('click', function(){$(this).parent().remove()});
     })
 })()
