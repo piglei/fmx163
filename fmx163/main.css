@@ -1,0 +1,20 @@
+.fmx163-tip {
+    background: #ccc;
+    padding: 4px;
+    background-color: #e1e8e5;
+    box-shadow: black 2px 2px 4px;
+}
+.fmx163-volumn-tip {
+    position: absolute;
+    top: 226px;
+    left: 50%;
+    z-index: 10000;
+    margin-left: 156px;
+}
+.fmx163-about {
+    position: absolute;
+    z-index: 10000;
+    top: 355px;
+    left: 50%;
+    margin-left: -59px;
+}

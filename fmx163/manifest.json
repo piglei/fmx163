@@ -1,0 +1,25 @@
+{
+    "manifest_version": 2,
+    "name": "FMx163",
+    "version": "1.0",
+    "description": "使用网易云的豆瓣FM",
+    "permissions": [
+        "tabs",
+        "storage",
+        "notifications"
+    ],
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    },
+    "content_scripts": [{
+        "css": ["main.css"],
+        "js": ["jquery-2.0.3.min.js", "c_fm.js"],
+        "matches": ["http://douban.fm/*"]
+    }, {
+        "js": ["jquery-2.0.3.min.js", "jquery.waituntilexists.js", "c_163.js"],
+        "matches": ["http://music.163.com/search/*"],
+        "all_frames": true
+    }],
+    "web_accessible_resources": ["e_fm.js"]
+}
