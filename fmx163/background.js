@@ -40,15 +40,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         notify(title, message);
         // Reload fm page, because we can not play next song direct
         chrome.storage.local.get(skey_fm_tab_id, function(result){
-            console.log(result);
             tab_id = result[skey_fm_tab_id];
-            console.log(tab_id);
 
             if (tab_id && tab_id !== {}) {
                 chrome.tabs.get(tab_id, function(tab) {
-                    chrome.tabs.update(tab_id, {url: url}, function(tab) {
-                        chrome.tabs.reload(tab.id);
-                    });
+                    chrome.tabs.reload(tab.id);
                 });
             }
         });
