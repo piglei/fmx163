@@ -11,14 +11,15 @@
 
     var now_playing;
 
-    var play_new_song = function(song_name){
+    var play_new_song = function(song){
+        song_name = song.song;
         if (song_name && (song_name != now_playing)) {
             now_playing = song_name;
             console.log('Now playing: ' + now_playing);
 
             chrome.runtime.sendMessage({
                 type: '163_play',
-                song: now_playing
+                song: song
             }, function(response) {
                 console.log(response);
             });
@@ -26,6 +27,9 @@
     }
 
     $(function(){
+        // Send init message
+        chrome.runtime.sendMessage({type: 'fm_inited'});
+
         document.addEventListener('fmx163_song_changed', function(e) {
             play_new_song(e.detail);
         });

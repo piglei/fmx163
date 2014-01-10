@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "FMx163",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "FMx163: 轻松享受320k的豆瓣FM",
     "permissions": [
         "tabs",

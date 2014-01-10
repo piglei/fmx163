@@ -2,7 +2,7 @@
     var _loop = function(){
         var song = (typeof(FM) !== 'undefined') && FM.getCurrentSongInfo();
         if (song) {
-            song = song.artistName + ' ' + song.songName;
+            song = {song: song.songName, artist: song.artistName}
             document.dispatchEvent(new CustomEvent('fmx163_song_changed', {
                 detail: song,
             }));
