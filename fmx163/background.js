@@ -36,17 +36,17 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         notify(request.title, request.message);
     } else if (request.type === '163_no_music_found') {
         var title = 'FMx163 提示';
-        var message = '没有在网易云音乐中找到歌曲"' + request.song + '"';
+        var message = '没有在网易云音乐中找到歌曲"' + request.song + '"，请手动切换到下一首。';
         notify(title, message);
         // Reload fm page, because we can not play next song direct
         chrome.storage.local.get(skey_fm_tab_id, function(result){
             tab_id = result[skey_fm_tab_id];
 
-            if (tab_id && tab_id !== {}) {
-                chrome.tabs.get(tab_id, function(tab) {
-                    chrome.tabs.reload(tab.id);
-                });
-            }
+            //if (tab_id && tab_id !== {}) {
+            //    chrome.tabs.get(tab_id, function(tab) {
+            //        chrome.tabs.reload(tab.id);
+            //    });
+            //}
         });
     }
 });
