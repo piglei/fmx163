@@ -1,8 +1,7 @@
 .fmx163-tip {
     background: #ccc;
     padding: 4px;
-    background-color: #e1e8e5;
-    box-shadow: black 2px 2px 4px;
+    background-color: white;
 }
 .fmx163-volumn-tip {
     position: absolute;
@@ -11,6 +10,7 @@
     z-index: 10000;
     margin-left: 100px;
     width: 324px;
+    box-shadow: #aaaaff 0px 0px 12px;
 }
 .fmx163-about {
     position: absolute;
@@ -18,6 +18,8 @@
     top: 355px;
     left: 50%;
     margin-left: -59px;
+    padding: 6px;
+    background-color: white;
 }
 .arrow-up {
     position: absolute;
@@ -27,5 +29,5 @@
     top: -8px;
 	border-left: 8px solid transparent;
 	border-right: 8px solid transparent;
-	border-bottom: 8px solid #e1e8e5;
+	border-bottom: 8px solid white;
 }
