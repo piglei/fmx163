@@ -4,7 +4,7 @@ FMx163
 :Author: piglei2007@gmail.com
 :Date: 2014-01-09
 
-一个简单的Chrome插件来帮助你轻松享受320k的豆瓣FM。
+一个简单的Chrome插件来帮助你轻松享受高品质的豆瓣FM。
 
 这么牛逼？怎么做到的？
 ----------------------
@@ -18,3 +18,5 @@ FMx163
 安装releases目录下的fmx163_latest.crx文件之后打开douban.fm即可。
 
 CRX地址: https://github.com/piglei/fmx163/raw/master/releases/fmx163_latest.crx
+
+

@@ -17,9 +17,8 @@
                 var played = false;
                 $('.srchsongst div.item').each(function(i, item){
                     var artist = $(item).find('div.w1').text().toLowerCase().replace(/\s/g, '');
-                    console.log(requested_artist, artist,requested_artist == artist );
                     if (artist === requested_artist) {
-                        $(this).find('span.ply')[0].click();
+                        $(this).find('.ply')[0].click();
                         played = true
                         return false;
                     }
@@ -27,7 +26,7 @@
                 })
                 // Play the first one if artist not match
                 if (!played) {
-                    $('span.ply')[0].click();
+                    $('.ply')[0].click();
                 }
             });
             // No music found
