@@ -2,7 +2,11 @@
     "manifest_version": 2,
     "name": "FMx163",
     "version": "0.0.4",
-    "description": "FMx163: 轻松享受320k的豆瓣FM",
+    "description": "FMx163: 轻松享受高品质的豆瓣FM",
+    "icons": {
+        "48": "icon48.png",
+        "128": "icon128.png"
+    },
     "permissions": [
         "tabs",
         "storage",
