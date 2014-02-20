@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "高品质豆瓣FM",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "你还要让豆瓣FM的音质强奸你的耳朵多久？\"高品质豆瓣FM\"让你轻松享受高品质的豆瓣FM！",
     "icons": {
         "128": "icons/icon128.png",
@@ -13,7 +13,10 @@
         "tabs",
         "storage",
         "notifications",
-        "*://*.music.126.net/*", "http://music.163.com/*", "webRequest", "webRequestBlocking"
+        "*://*.music.126.net/*",
+        "*://music.163.com/*",
+        "webRequest",
+        "webRequestBlocking"
     ],
     "background": {
         "scripts": ["jquery-2.0.3.min.js", "background.js"],

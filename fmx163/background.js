@@ -1,14 +1,24 @@
 // Handle requests for passwords
-var url_song_search = 'http://music.163.com/#/search/m/?type=1&autoplay=1';
-var skey_fm_tab_id = 'doubanfm_tab_id';
+var SKEY_FM_TAB_ID = 'doubanfm_tab_id';
 
 var API_SONG_SEARCH = 'http://music.163.com/api/search/get/web';
 var API_SONG_DETAIL = 'http://music.163.com/api/song/detail/'
 
 
-// Clean up an artist name, make it lower case and remove white spaces
-var clean_up_artist = function(s) {
-    return s.toLowerCase().replace(/\s/g, '');
+// Clean up an string, make it lower case and remove white spaces
+var clean_up_string = function(s) {
+    //result = s.toLowerCase().replace(/[\s'"]|\(.*\)|\[.*\]|\.\.\./g, '').replace(/[^\u4e00-\u9fa5a-z0-9]/g, '');
+    result = s.toLowerCase().replace(/[\s'"]|\(.*\)|\[.*\]|\.\.\./g, '');
+    return result;
+}
+
+var fuzzy_equal = function(s1, s2) {
+    s1 = clean_up_string(s1);
+    s2 = clean_up_string(s2);
+    if (s1 === s2) return true;
+    if (s1.length > 3 && s2.indexOf(s1) !== -1) return true;
+    if (s2.length > 3 && s1.indexOf(s2) !== -1) return true;
+    return false;
 }
 
 // Get song detail by song_id
@@ -18,11 +28,19 @@ var get_song_detail = function(song_id, callback) {
     })
 }
 
+// Send message to douban tab
+var send_message_to_douban_tab = function(request) {
+    chrome.storage.local.get(SKEY_FM_TAB_ID, function(result){
+        tab_id = result[SKEY_FM_TAB_ID];
+        chrome.tabs.sendMessage(tab_id, request);
+    });
+}
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.type === 'fm_inited') {
         // Save douban fm tab id
         var data = {}
-        data[skey_fm_tab_id] = sender.tab.id;
+        data[SKEY_FM_TAB_ID] = sender.tab.id;
         chrome.storage.local.set(data);
     } else if (request.type === '163_play') {
         song = request.song;
@@ -43,32 +61,32 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 var matchs_found = false;
                 var best_song_id, first_song_id;
                 if (!songs) {
-                    chrome.runtime.sendMessage({type: '163_no_music_found', song: song.song});
+                    send_message_to_douban_tab({type: 'fm_play_raw_mp3'});
                     return 
                 }
                 $.each(songs, function(i, item) {
                     if (!first_song_id) {first_song_id = item.id};
                     $.each(item.artists, function(i, artist_item){
-                        if (clean_up_artist(artist_item.name) === clean_up_artist(song.artist)) {
+                        if (fuzzy_equal(item.album.name, song.album)) {
                             best_song_id = item.id;
                             matchs_found = true;
                             return false;
                         }
-                    })
+                    });
                     // Break if artist matchs
                     if (matchs_found) return false;
                 });
                 if (!matchs_found) {
                     best_song_id = first_song_id;
+                    // Update: Use douban's mp3 file
+                    // send_message_to_douban_tab({type: 'fm_play_raw_mp3'});
+                    // return 
                 }
                 // Query for song's mp3Url, then send play event
                 get_song_detail(best_song_id, function(song_info){
-                    chrome.storage.local.get(skey_fm_tab_id, function(result){
-                        tab_id = result[skey_fm_tab_id];
-                        chrome.tabs.sendMessage(tab_id, {
-                            type: 'fm_play_new_song',
-                            song: song_info
-                        });
+                    send_message_to_douban_tab({
+                        type: 'fm_play_new_song',
+                        song: song_info
                     });
                 });
             }
@@ -76,21 +94,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     } else if (request.type === 'notify') {
         notify(request.title, request.message);
-    } else if (request.type === '163_no_music_found') {
-        var title = 'FMx163 提示';
-        var message = '没有在网易云音乐中找到歌曲"' + request.song + '"，请手动切换到下一首。';
-        notify(title, message);
-        // Reload fm page, because we can not play next song direct
-        chrome.storage.local.get(skey_fm_tab_id, function(result){
-            tab_id = result[skey_fm_tab_id];
-
-            //if (tab_id && tab_id !== {}) {
-            //    chrome.tabs.get(tab_id, function(tab) {
-            //        chrome.tabs.reload(tab.id);
-            //    });
-            //}
-        });
-    }
+    } 
 });
 
 // Show desktop notification
