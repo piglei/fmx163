@@ -13,7 +13,7 @@
         "tabs",
         "storage",
         "notifications",
-        "http://*/*", "https://*/*", "webRequest", "webRequestBlocking"
+        "*://*.music.126.net/*", "http://music.163.com/*", "webRequest", "webRequestBlocking"
     ],
     "background": {
         "scripts": ["jquery-2.0.3.min.js", "background.js"],
