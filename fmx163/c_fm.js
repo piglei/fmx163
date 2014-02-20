@@ -1,5 +1,15 @@
 // Author: piglei <piglei2007@gmail.com>
 // Date: 2014-01-07
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    var song = request.song;
+    $('#fmx163-player-audio').attr('src', song.mp3Url);
+    var audio = $('#fmx163-player-audio')[0]
+    audio.loop = false;
+    audio.play();
+    $('#player-info').attr('title', '正在播放: ' + song.artists[0].name + ' - ' + song.name);
+});
+
 (function(){
     // Embed e_fm.js
     var s = document.createElement('script');
@@ -33,14 +43,28 @@
         document.addEventListener('fmx163_song_changed', function(e) {
             play_new_song(e.detail);
         });
+        document.addEventListener('fmx163_player_play', function(e) {
+            $('#fmx163-player').css('opacity', '1');
+            $('#fmx163-player-audio')[0].play();
+        });
+        document.addEventListener('fmx163_player_pause', function(e) {
+            $('#fmx163-player').css('opacity', '0.2');
+            $('#fmx163-player-audio')[0].pause();
+        });
 
-        $("#fm-section").append('<div class="fmx163-tip fmx163-volumn-tip">请手动关闭豆瓣FM的<strong>音量</strong>，不然会出现"二重唱"哦 ' + 
+        var icon_url = chrome.extension.getURL('icons/icon32.png');
+        $("#fm-section").append('<div class="fmx163-tip fmx163-volumn-tip">请手动<strong>慢慢关闭豆瓣FM的音量</strong>，不然会出现"二重唱"哦 ' + 
                                 '<a href="javascript:">我知道了</a>' +
                                 '<div class="arrow-up"></div></div>');
         $("#fm-section").append('<div class="fmx163-tip fmx163-about">本插件仅供学习交流使用<br>' +
                                  '如需关闭，请在Chrome插件管理页面禁用或卸载本插件<br/>' + 
                                  '<a href="http://me.alipay.com/piglei" target="_blank">请作者喝杯咖啡</a> ' +
                                  '| <a href="http://www.zlovezl.cn/articles/fmx163-released/" target="_blank">联系作者</a></div>');
+        $("#fm-section").append('<div id="fmx163-player">' + 
+                                '<audio id="fmx163-player-audio" type="audio/mpeg" controls></audio> ' + 
+                                '<div id="fmx163-player-icon"><a href="javascript:void(0)" style="background: transparent" id="player-info">' +
+                                '<img src="' + icon_url + '" /></a>' + 
+                                '</div></div>');
 
         // Blink once and bind click function
         setTimeout(function(){

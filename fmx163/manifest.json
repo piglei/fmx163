@@ -1,20 +1,23 @@
 {
     "manifest_version": 2,
     "name": "高品质豆瓣FM",
-    "version": "0.0.5",
-    "description": "让你轻松享受高品质的豆瓣FM",
+    "version": "1.0.0",
+    "description": "你还要让豆瓣FM的音质强奸你的耳朵多久？\"高品质豆瓣FM\"让你轻松享受高品质的豆瓣FM！",
     "icons": {
-        "48": "icon48.png",
-        "128": "icon128.png"
+        "128": "icons/icon128.png",
+        "48": "icons/icon48.png",
+        "32": "icons/icon32.png",
+        "16": "icons/icon16.png"
     },
     "permissions": [
         "tabs",
         "storage",
-        "notifications"
+        "notifications",
+        "http://*/*", "https://*/*", "webRequest", "webRequestBlocking"
     ],
     "background": {
-        "scripts": ["background.js"],
-        "persistent": false
+        "scripts": ["jquery-2.0.3.min.js", "background.js"],
+        "persistent": true
     },
     "content_scripts": [{
         "css": ["main.css"],
@@ -25,5 +28,5 @@
         "matches": ["http://music.163.com/search/*"],
         "all_frames": true
     }],
-    "web_accessible_resources": ["e_fm.js"]
+    "web_accessible_resources": ["e_fm.js", "icons/*"]
 }

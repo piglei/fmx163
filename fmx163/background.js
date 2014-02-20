@@ -2,6 +2,22 @@
 var url_song_search = 'http://music.163.com/#/search/m/?type=1&autoplay=1';
 var skey_fm_tab_id = 'doubanfm_tab_id';
 
+var API_SONG_SEARCH = 'http://music.163.com/api/search/get/web';
+var API_SONG_DETAIL = 'http://music.163.com/api/song/detail/'
+
+
+// Clean up an artist name, make it lower case and remove white spaces
+var clean_up_artist = function(s) {
+    return s.toLowerCase().replace(/\s/g, '');
+}
+
+// Get song detail by song_id
+var get_song_detail = function(song_id, callback) {
+    $.getJSON(API_SONG_DETAIL, {id: song_id, ids: '[' + song_id + ']'}, function(resp){
+        callback && callback(resp.songs[0]);
+    })
+}
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.type === 'fm_inited') {
         // Save douban fm tab id
@@ -10,28 +26,54 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         chrome.storage.local.set(data);
     } else if (request.type === '163_play') {
         song = request.song;
-        var url = url_song_search + '&s=' + encodeURIComponent(song.song) + 
-                  '&artist=' + encodeURIComponent(song.artist);
-        // Open a new tab for the first time
-        chrome.storage.local.get('163_tab_id', function(tab_id){
-            tab_id = tab_id['163_tab_id'];
 
-            if (!tab_id || tab_id === {}) {
-                crete_new_tab(url);
-            } else {
-                chrome.tabs.get(tab_id, function(tab) {
-                    // check if tab does not exists
-                    if (typeof tab == 'undefined') {
-                        crete_new_tab(url);
-                    } else {
-                        chrome.tabs.update(tab_id, {url: url}, function(tab) {
-                            chrome.tabs.reload(tab.id);
+        // Call 163 api to search for songs
+        $.ajax({
+            type: 'POST',
+            url: API_SONG_SEARCH,
+            data: {
+                type: '1',
+                s: song.song + ' ' + song.artist,
+                offset: '0',
+                limit: '30'
+            }, 
+            dataType: 'json',
+            success: function(resp) {
+                var songs = resp.result.songs;
+                var matchs_found = false;
+                var best_song_id, first_song_id;
+                if (!songs) {
+                    chrome.runtime.sendMessage({type: '163_no_music_found', song: song.song});
+                    return 
+                }
+                $.each(songs, function(i, item) {
+                    if (!first_song_id) {first_song_id = item.id};
+                    $.each(item.artists, function(i, artist_item){
+                        if (clean_up_artist(artist_item.name) === clean_up_artist(song.artist)) {
+                            best_song_id = item.id;
+                            matchs_found = true;
+                            return false;
+                        }
+                    })
+                    // Break if artist matchs
+                    if (matchs_found) return false;
+                });
+                if (!matchs_found) {
+                    best_song_id = first_song_id;
+                }
+                // Query for song's mp3Url, then send play event
+                get_song_detail(best_song_id, function(song_info){
+                    chrome.storage.local.get(skey_fm_tab_id, function(result){
+                        tab_id = result[skey_fm_tab_id];
+                        chrome.tabs.sendMessage(tab_id, {
+                            type: 'fm_play_new_song',
+                            song: song_info
                         });
-                    }
+                    });
                 });
             }
-            
         });
+
     } else if (request.type === 'notify') {
         notify(request.title, request.message);
     } else if (request.type === '163_no_music_found') {
@@ -73,4 +115,26 @@ var crete_new_tab = function(url){
     });
 }
 
+
+// Spoot `Referrer` header for request to 163
+var referrer_163 = 'http://music.163.com/';
+
+chrome.webRequest.onBeforeSendHeaders.addListener(
+    function(details) {
+        var referrer_header_found = false;
+        for (var i = 0; i < details.requestHeaders.length; ++i) {
+            if (details.requestHeaders[i].name === 'Referer') {
+                details.requestHeaders[i].value = referrer_163;
+                referrer_header_found = true;
+                break;
+            }
+        }
+        if (!referrer_header_found) {
+            details.requestHeaders.push({'name': 'Referer', 'value': referrer_163})
+        }
+        return {requestHeaders: details.requestHeaders};
+    },
+    {urls: ["*://*.music.126.net/*", "http://music.163.com/*"]},
+    ["blocking", "requestHeaders"]
+);
 

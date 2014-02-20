@@ -8,8 +8,8 @@
     top: 230px;
     left: 50%;
     z-index: 10000;
-    margin-left: 100px;
-    width: 324px;
+    margin-left: 83px;
+    width: 342px;
     box-shadow: #aaaaff 0px 0px 12px;
 }
 .fmx163-about {
@@ -30,4 +30,32 @@
 	border-left: 8px solid transparent;
 	border-right: 8px solid transparent;
 	border-bottom: 8px solid white;
+}
+#fmx163-player {
+    position: absolute;
+    z-index: 9995;
+    top: 229px;
+    left: 50%;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    margin-left: 185px;
+}
+#fmx163-player audio {
+    width: 269px;
+}
+#fmx163-player-icon {
+    position: absolute;
+    z-index: 9999;
+    padding: 0;
+    background-color: #434343;
+    top: 1px;
+    left: 9px;
+    width: 28px;
+    height: 24px;
+    padding: 2px;
+}
+#fmx163-player-icon img {
+    width: 24px;
+    height: 24px;
 }
