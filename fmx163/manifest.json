@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "高品质豆瓣FM",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "description": "你还要让豆瓣FM的音质强奸你的耳朵多久？\"高品质豆瓣FM\"让你轻松享受高品质的豆瓣FM！",
     "icons": {
         "128": "icons/icon128.png",
@@ -27,7 +27,7 @@
         "js": ["jquery-2.0.3.min.js", "c_fm.js"],
         "matches": ["http://douban.fm/", "http://douban.fm/?*"]
     }, {
-        "js": ["jquery-2.0.3.min.js", "jquery.waituntilexists.js", "c_163.js"],
+        "js": ["jquery-2.0.3.min.js", "jquery.waituntilexists.js"],
         "matches": ["http://music.163.com/search/*"],
         "all_frames": true
     }],

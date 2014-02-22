@@ -11,7 +11,6 @@
     var play_mp3 = function(url) {
         $('#fmx163-player-audio').attr('src', url);
         var audio = $('#fmx163-player-audio')[0]
-        audio.loop = false;
         audio.play();
     }
 
@@ -69,11 +68,11 @@
             play_new_song(e.detail);
         });
         document.addEventListener('fmx163_player_play', function(e) {
-            $('#fmx163-player').css('opacity', '1');
+            $('#fmx163-player,#fmx163-player-icon').css('opacity', '1');
             $('#fmx163-player-audio')[0].play();
         });
         document.addEventListener('fmx163_player_pause', function(e) {
-            $('#fmx163-player').css('opacity', '0.2');
+            $('#fmx163-player,#fmx163-player-icon').css('opacity', '0.2');
             $('#fmx163-player-audio')[0].pause();
         });
 
@@ -85,10 +84,16 @@
                                  '<a href="http://me.alipay.com/piglei" target="_blank">请作者喝杯咖啡</a> ' +
                                  '| <a href="http://www.zlovezl.cn/articles/fmx163-released/" target="_blank">联系作者</a></div>');
         $("#fm-section").append('<div id="fmx163-player">' + 
-                                '<audio id="fmx163-player-audio" type="audio/mpeg" controls></audio> ' + 
+                                '<audio id="fmx163-player-audio" type="audio/mpeg" controls></audio></div>' + 
                                 '<div id="fmx163-player-icon"><a href="javascript:void(0)" style="background: transparent" id="player-info">' +
-                                '<img src="' + icon_default_url + '" /></a>' + 
-                                '</div></div>');
+                                '<img src="' + icon_default_url + '" /></a></div>' + 
+                                '<div id="fmx163-player-blocker"></div>');
+
+
+        // Disable auto loop feature
+        $('#fmx163-player-audio')[0].addEventListener('ended', function(){
+            this.src = '';
+        }, false);
 
         // Blink once and bind click function
         setTimeout(function(){
