@@ -55,9 +55,9 @@
     margin-left: 324px;
     width: 24px;
     height: 30px;
-    padding: 0px 10px 0px 10px;
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
+    padding: 0px 10px 0px 12px;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
 }
 #fmx163-player-icon img {
     margin-top: 4px;
