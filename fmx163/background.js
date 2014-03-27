@@ -48,7 +48,7 @@ var query_163_to_play_song = function(song) {
         var songs = resp.result.songs;
         var matchs_found = false;
         var best_song_id, first_song_id;
-        if (!songs) {
+        if (!songs || !songs.length) {
             send_message_to_douban_tab({type: 'fm_play_raw_mp3'});
             return 
         }
