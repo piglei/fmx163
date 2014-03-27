@@ -26,7 +26,7 @@ var fuzzy_equal = function(s1, s2) {
 // Send message to douban tab
 var send_message_to_douban_tab = function(request) {
     chrome.storage.local.get(SKEY_FM_TAB_ID, function(result){
-        tab_id = result[SKEY_FM_TAB_ID];
+        var tab_id = result[SKEY_FM_TAB_ID];
         chrome.tabs.sendMessage(tab_id, request);
     });
 }
@@ -109,7 +109,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         data[SKEY_FM_TAB_ID] = sender.tab.id;
         chrome.storage.local.set(data);
     } else if (request.type === '163_play') {
-        song = request.song;
+        var song = request.song;
         query_163_to_play_song(song);
     } else if (request.type === 'notify') {
         notify(request.title, request.message);
