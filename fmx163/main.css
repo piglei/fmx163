@@ -8,18 +8,19 @@
     top: 230px;
     left: 50%;
     z-index: 10000;
-    margin-left: 83px;
-    width: 342px;
+    margin-left: 125px;
+    width: 300px;
     box-shadow: #aaaaff 0px 0px 12px;
 }
 .fmx163-about {
     position: absolute;
     z-index: 10000;
-    top: 355px;
+    top: 342px;
     left: 50%;
     margin-left: -59px;
     padding: 6px;
     background-color: white;
+    width: 320px;
 }
 .arrow-up {
     position: absolute;
@@ -75,4 +76,17 @@
     margin-left: 185px;
     height: 40px;
     width: 180px;
+}
+.div-fork {
+    float: right;
+    text-decoration: underline;
+}
+.div-fork img {
+    width: 12px;
+    height: 12px;
+}
+.wrapper-jiathis {
+    padding-top: 4px;
+    margin-top: 4px;
+    border-top: 1px solid #f4f4f4;
 }

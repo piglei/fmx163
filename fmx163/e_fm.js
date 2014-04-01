@@ -54,3 +54,9 @@
 })();
 
 
+// Customized config for jiathis
+var jiathis_config = {
+    url: "https://chrome.google.com/webstore/detail/%E9%AB%98%E5%93%81%E8%B4%A8%E8%B1%86%E7%93%A3fm/pdgnopcbjjdkdeaimdbncphhcgjaaifi",
+    title: "#插件分享：高品质豆瓣FM#",
+    summary:"给大家推荐一个好用的Chrome插件，可以轻松享受320k豆瓣FM，一个字，赞。"
+}

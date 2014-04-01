@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
     "name": "高品质豆瓣FM",
-    "version": "1.1.1",
-    "description": "\"高品质豆瓣FM\"让你轻松享受高品质的豆瓣FM！",
+    "version": "2.0.0",
+    "description": "\"高品质豆瓣FM\"让你轻松享受高达320kbps高品质的豆瓣FM！",
     "icons": {
         "128": "icons/icon128.png",
         "48": "icons/icon48.png",
@@ -15,21 +15,25 @@
         "notifications",
         "*://*.music.126.net/*",
         "*://music.163.com/*",
+        "*://music.baidu.com/*",
+        "*://play.baidu.com/*",
+        "*://yinyueshiting.baidu.com/*",
+        "*://119.75.215.114/*",
         "webRequest",
         "webRequestBlocking"
     ],
     "background": {
-        "scripts": ["jquery-2.0.3.min.js", "background.js"],
+        "scripts": ["lib/json.js", "lib/jquery-2.0.3.min.js", "base.js", "background.js"],
         "persistent": true
     },
     "content_scripts": [{
         "css": ["main.css"],
-        "js": ["jquery-2.0.3.min.js", "c_fm.js"],
+        "js": ["lib/json.js", "lib/jquery-2.0.3.min.js", "base.js", "c_fm.js"],
         "matches": ["http://douban.fm/", "http://douban.fm/?*"]
-    }, {
-        "js": ["jquery-2.0.3.min.js", "jquery.waituntilexists.js"],
-        "matches": ["http://music.163.com/search/*"],
-        "all_frames": true
     }],
-    "web_accessible_resources": ["e_fm.js", "icons/*"]
+    "web_accessible_resources": ["e_fm.js", "icons/*"],
+    "browser_action": {
+        "default_icon": "icons/icon32.png",
+        "default_popup": "popup.html"
+    }
 }

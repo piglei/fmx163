@@ -22,3 +22,15 @@ FMx163
 CRX地址: https://github.com/piglei/fmx163/raw/master/releases/fmx163_latest.crx
 
 
+CHANGES
+-------
+
+VERSION 2.0.0 (2014-04-01)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- 增加百度音乐的源，现在可以提供高达320kbps的音质
+- 增加一个设置页面，可以方便的开启和关闭插件，设置音源
+- 恼人的关闭音量提醒现在可以不再出现
+- 增加分享按钮，喜欢就分享给你的朋友吧
+- 增加github fork链接，欢迎fork
+
