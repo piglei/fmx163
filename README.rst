@@ -25,6 +25,11 @@ CRX地址: https://github.com/piglei/fmx163/raw/master/releases/fmx163_latest.cr
 CHANGES
 -------
 
+VERSION 2.0.1 (2014-04-01)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- 极大的优化了搜索匹配歌曲的逻辑
+
 VERSION 2.0.0 (2014-04-01)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

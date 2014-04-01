@@ -15,7 +15,8 @@
                 song: current_song.title, 
                 artist: current_song.artist,
                 album: current_song.albumtitle,
-                url: current_song.url
+                url: current_song.url,
+                len: current_song.len
             }
             current_song_old = current_song;
 

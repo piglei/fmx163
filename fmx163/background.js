@@ -7,6 +7,8 @@ var API_SONG_DETAIL = 'http://music.163.com/api/song/detail/'
 var BAIDU_API_SONG_SEARCH = 'http://music.baidu.com/search';
 var BAIDU_API_SONG_DETAIL = 'http://play.baidu.com/data/music/songlink';
 
+var SECONDS_JITTER = 5
+
 
 // Send message to douban tab
 var send_message_to_douban_tab = function(request) {
@@ -39,9 +41,12 @@ var base_utils = {
 
 var controller_163 = {
     // Query for song detail
-    'get_song_detail': function(song_id, callback) {
-        $.getJSON(API_SONG_DETAIL, {id: song_id, ids: '[' + song_id + ']'}, function(resp){
-            callback && callback(resp.songs[0]);
+    'get_song_detail': function(song_ids, callback) {
+        $.getJSON(API_SONG_DETAIL, {
+            //id: song_id,
+            ids: JSON.stringify(song_ids)
+        }, function(resp){
+            callback && callback(resp.songs);
         }).fail(function() {
             callback && callback(null);
         });
@@ -52,35 +57,42 @@ var controller_163 = {
             var songs = resp.result.songs;
             var matchs_found = false;
             var best_song_id, first_song_id;
-            if (!songs || !songs.length) {
+            var song_ids = [];
+            // Check fuzzy album name
+            $.each(songs, function(i, item) {
+                if (base_utils.fuzzy_equal(item.album.name, song.album)) {
+                    song_ids.push(item.id);
+                }
+            });
+            if (song_ids.length === 0) {
                 callback && callback(null);
                 return 
             }
-            $.each(songs, function(i, item) {
-                if (!first_song_id) {first_song_id = item.id};
-                $.each(item.artists, function(i, artist_item){
-                    if (base_utils.fuzzy_equal(item.album.name, song.album)) {
-                        best_song_id = item.id;
-                        matchs_found = true;
+            // Query for song's mp3Url, then send play event
+            self.get_song_detail(song_ids, function(infos){
+                var matched_song_info;
+                $.each(infos, function(i, song_info) {
+                    var len = song_info['mMusic']['playTime'] / 1000;
+
+                    console.log('Checking music length ', song['len'], len);
+                    if (Math.abs(len - song['len']) <= SECONDS_JITTER) {
+                        matched_song_info = song_info;
                         return false;
                     }
                 });
-                // Break if artist matchs
-                if (matchs_found) return false;
-            });
-            if (!matchs_found) {
-                best_song_id = first_song_id;
-            }
-            // Query for song's mp3Url, then send play event
-            self.get_song_detail(best_song_id, function(song){
-                callback && callback({
-                    'source': '网易云音乐',
-                    'name': song.name,
-                    'album': song.album.name,
-                    'artist': song.artists[0].name,
-                    'mp3_url': song.mp3Url,
-                    'website': 'http://music.163.com/#/song?id=' + song.id
-                });
+
+                if (matched_song_info) {
+                    callback && callback({
+                        'source': '网易云音乐',
+                        'name': matched_song_info.name,
+                        'album': matched_song_info.album.name,
+                        'artist': matched_song_info.artists[0].name,
+                        'mp3_url': matched_song_info.mp3Url,
+                        'website': 'http://music.163.com/#/song?id=' + matched_song_info.id
+                    });
+                } else {
+                    callback && callback(null);
+                }
             });
         };
 
@@ -111,12 +123,12 @@ var controller_163 = {
 }
 
 var controller_baidu = {
-    'get_song_detail': function(song_id, callback) {
+    'get_song_detail': function(song_ids, callback) {
         $.ajax({
             type: 'POST',
             url: BAIDU_API_SONG_DETAIL,
             data: {
-                'songIds': song_id,
+                'songIds': song_ids.join(','),
                 'hq': 1,
                 'type': 'm4a,mp3',
                 'rate': '',
@@ -136,8 +148,8 @@ var controller_baidu = {
                 callback && callback(null);
             },
             success: function(resp) {
-                var song = resp.data.songList[0];
-                callback && callback(song);
+                var result = resp.data.songList;
+                callback && callback(result);
             }
         });
     },
@@ -146,63 +158,71 @@ var controller_baidu = {
         var success_callback = function(resp){
             var resp = $(resp);
             var best_song_id;
+            var song_ids = [];
             resp.find('li[data-songitem]').each(function(i, elem){
                 if ($(elem).find('span.icon-thirdparty').length > 0) {
                     return;
                 }
-                var song_name = $.trim($(elem).find('span.song-title').text());
-                var artist = $.trim($(elem).find('span.singer').text());
-                var album = $.trim($(elem).find('span.album-title').text());
-                album = album.slice(1, -1)
-                if (base_utils.fuzzy_equal(song_name, song.song) && base_utils.fuzzy_equal(artist, song.artist)) {
-                    var song_item = $(elem).data('songitem');
-                    best_song_id = song_item.songItem.sid;
-                    return false;
-                }
+                // No need to check here, we will check music length later
+                //
+                //var song_name = $.trim($(elem).find('span.song-title').text());
+                //var artist = $.trim($(elem).find('span.singer').text());
+                //var album = $.trim($(elem).find('span.album-title').text());
+                //album = album.slice(1, -1)
+                //console.log(song_name, song.song, base_utils.fuzzy_equal(song_name, song.song));
+                //console.log(artist, song.artist, base_utils.fuzzy_equal(artist, song.artist));
+                //console.log(album, song.album, base_utils.fuzzy_equal(album, song.album));
+
+                var song_item = $(elem).data('songitem');
+                song_ids.push(song_item.songItem.sid);
+
             });
-            if (!best_song_id) {
+            if (song_ids.length === 0) {
                 callback && callback(null);
                 return;
             }
 
             // Query get song detail API
-            self.get_song_detail(best_song_id, function(song_info){
-                if (!song_info) {
+            self.get_song_detail(song_ids, function(infos){
+                if (!infos || infos.length === 0) {
                     callback && callback(null);
                     return
                 }
                 var mp3_url, max_rate;
-                $.each(song_info.linkinfo, function(i, item) {
-                    i = parseInt(i);
-                    // Rate greater than 320 sucks!
-                    if (i <= 320 && (!max_rate || i > max_rate )) {
-                        max_rate = i;
+                var matched_song_info;
+                $.each(infos, function(i, song_info) {
+                    $.each(song_info.linkinfo, function(i, item) {
+                        i = parseInt(i);
+                        // Rate greater than 320 sucks!
+                        if (i <= 320 && (!max_rate || i > max_rate )) {
+                            max_rate = i;
+                            len = item['time'];
+                        }
+                    });
+                    console.log('Checking music length ', song['len'], len);
+                    if (max_rate >= 320 && Math.abs(len - song['len']) <= SECONDS_JITTER) {
+                        mp3_url = song_info.linkinfo[max_rate]['songLink'];
+                        matched_song_info = song_info;
+                        return false;
                     }
                 });
-                if (max_rate >= 320) {
-                    mp3_url = song_info.linkinfo[max_rate]['songLink'];
-                }
-                if (mp3_url) {
+
+                if (matched_song_info) {
                     callback && callback({
                         'source': '百度音乐',
-                        'name': song_info.songName,
-                        'album': song_info.albumName,
-                        'artist': song_info.artistName,
+                        'name': matched_song_info.songName,
+                        'album': matched_song_info.albumName,
+                        'artist': matched_song_info.artistName,
                         'mp3_url': mp3_url,
-                        'website': 'http://music.baidu.com/song/' + song_info.songId
+                        'website': 'http://music.baidu.com/song/' + matched_song_info.songId
                     });
                 } else {
                     callback && callback(null);
                 }
             });
         }
-
-        // Make search key
-        //if (song.album.indexOf('...') != -1) {
-        //    var key = song.song + ' ' + song.artist;
-        //} else {
-        //    var key = song.song + ' ' + song.artist + ' ' + song.album;
-        //}
+        
+        // Use song name and artist as search key
         var key = song.song + ' ' + song.artist;
         $.ajax({
             type: 'GET',
