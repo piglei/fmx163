@@ -64,7 +64,7 @@ var controller_163 = {
         }
         result = base_utils.bytes_to_str(result);
         result = CryptoJS.MD5(result).toString(CryptoJS.enc.Base64);
-        return result.replace(/\//, '_').replace(/\+/, '-');
+        return result.replace(/\//g, '_').replace(/\+/g, '-');
     },
     'get_song_url': function(song) {
         var self = this;
