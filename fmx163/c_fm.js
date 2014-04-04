@@ -19,9 +19,22 @@
 
     // Play mp3 by url
     var play_mp3 = function(url) {
+        $('#download_mp3_file').data('href', url);
+
         $('#fmx163-player-audio').attr('src', url);
         var audio = $('#fmx163-player-audio')[0]
         audio.play();
+    }
+
+    // Play douban
+    var play_douban_music = function() {
+        if (current_song) {
+            console.log('Playing mp3 from douban: ' + current_song.url);
+            play_mp3(current_song.url);
+            $('#player-info').attr('title', '正在播放豆瓣源');
+            $('#fmx163-player-info-icon img').attr('src', icon_douban_url);
+            $('#fmx163-player-info-icon a').attr('href', 'javascript:void(0)');
+        }
     }
 
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -30,19 +43,13 @@
             console.log('Playing mp3 from external: ' + song.mp3_url);
             play_mp3(song.mp3_url)
             $('#player-info').attr('title', '* 正在播放' + song.source + '源: ' + song.artist +
-                '<' + song.album + '> - ' + song.name);
-            $('#fmx163-player-icon img').attr('src', icon_default_url);
-            $('#fmx163-player-icon a').attr('href', song.website);
+                '<' + song.album + '> - ' + song.name + '(' + song.kbps + 'kbps)');
+            $('#fmx163-player-info-icon img').attr('src', icon_default_url);
+            $('#fmx163-player-info-icon a').attr('href', song.website);
         }
         else if (request.type === 'fm_play_raw_mp3') {
             // Play low quality douban's mp3 file
-            if (current_song) {
-                console.log('Playing mp3 from douban: ' + current_song.url);
-                play_mp3(current_song.url);
-                $('#player-info').attr('title', '正在播放豆瓣源');
-                $('#fmx163-player-icon img').attr('src', icon_douban_url);
-                $('#fmx163-player-icon a').attr('href', 'javascript:void(0)');
-            }
+            play_douban_music();
         }
     });
 
@@ -84,11 +91,11 @@
                 play_new_song(e.detail);
             });
             document.addEventListener('fmx163_player_play', function(e) {
-                $('#fmx163-player,#fmx163-player-icon').css('opacity', '1');
+                $('#fmx163-player,#fmx163-player-info').css('opacity', '1');
                 $('#fmx163-player-audio')[0].play();
             });
             document.addEventListener('fmx163_player_pause', function(e) {
-                $('#fmx163-player,#fmx163-player-icon').css('opacity', '0.2');
+                $('#fmx163-player,#fmx163-player-info').css('opacity', '0.2');
                 $('#fmx163-player-audio')[0].pause();
             });
 
@@ -102,7 +109,7 @@
 
             $("#fm-section").append('<div class="fmx163-tip fmx163-about">本插件仅供学习交流使用' + 
                                      '<div class="div-fork"><a href="https://github.com/piglei/fmx163" target="_blank">Fork me on <img src="' + icon_github + '" /></a></div><br>' +
-                                     '如需关闭或修改配置，请点击地址栏右侧的插件图标<br/>' + 
+                                     '如果在播放过程频繁遇到卡顿问题，请点击地址栏右侧的插件图标尝试修改配置<br/>' + 
                                      '<a href="http://me.alipay.com/piglei" target="_blank">请作者喝杯咖啡</a> ' +
                                      '| <a href="http://www.zlovezl.cn/articles/fmx163-released/" target="_blank">联系作者</a>' + 
                                      '<div class="wrapper-jiathis"><div style="float: left; margin-right: 8px;">分享插件: </div><div class="jiathis_style"><a class="jiathis_button_qzone"></a> <a class="jiathis_button_tsina"></a> <a class="jiathis_button_tqq"></a> <a class="jiathis_button_weixin"></a> <a class="jiathis_button_renren"></a> <a class="jiathis_button_xiaoyou"></a> <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a> <a class="jiathis_counter_style"></a> </div></div>' + 
@@ -111,14 +118,28 @@
 
             $("#fm-section").append('<div id="fmx163-player">' + 
                                     '<audio id="fmx163-player-audio" type="audio/mpeg" controls></audio></div>' + 
-                                    '<div id="fmx163-player-icon"><a target="_blank" href="javascript:void(0)" style="background: transparent" id="player-info">' +
-                                    '<img src="' + icon_default_url + '" /></a></div>' + 
+                                    '<div id="fmx163-player-info">' +
+                                        '<div id="fmx163-player-info-icon"><a target="_blank" href="javascript:void(0)" style="background: transparent" id="player-info">' +
+                                        '<img src="' + icon_default_url + '" /></a></div> ' + 
+                                        '<div id="fmx163-player-info-actions"><a href="javascript:void(0)" id="download_mp3_file">下载歌曲</a></div></div>' + 
                                     '<div id="fmx163-player-blocker"></div>');
 
             // Disable auto loop feature
-            $('#fmx163-player-audio')[0].addEventListener('ended', function(){
+            var elem_audio = $('#fmx163-player-audio')[0];
+            elem_audio.addEventListener('ended', function(){
                 this.src = '';
             }, false);
+            elem_audio.addEventListener('error', function(){
+                console.log('Error occurred when loading external source, play douban instead.');
+                play_douban_music();
+            }, false);
+
+            $('#download_mp3_file').bind('click', function(){
+                var href = $(this).data('href');
+                if (href) {
+                    alert('- 正在播放歌曲时文件不能正常下载，请在未播放时打开或者使用其他下载工具\n\n音乐文件地址:\n' + href);
+                }
+            });
 
             // Blink once and bind click function
             setTimeout(function(){

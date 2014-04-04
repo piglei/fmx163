@@ -16,12 +16,16 @@
         font-size: 12px;
         padding: 8px 4px;
       }
+      .gray {
+        color: #999;
+      }
     </style>
     <script type="text/javascript" charset="utf-8" src="lib/json.js"></script>
     <script type="text/javascript" charset="utf-8" src="lib/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="base.js"></script>
     </head>
     <body>
+      <h3>高配置豆瓣FM<span class="gray">(v2.1.0)</span></h3>
       <h4>插件状态</h4>
       <select name="enabled">
         <option value="on">开启</option>
@@ -30,17 +34,24 @@
       <h4>来源选择(优先级从上往下)</h4>
       <ul class="list-sources">
         <li>
+          <input type="checkbox" name="source" value="163" id="source_163"/>
+          <label for="source_163">网易云音乐(320kbps)</label>
+        </li>
+        <li>
           <input type="checkbox" name="source" value="baidu" id="source_baidu"/>
           <label for="source_baidu">百度音乐(320kbps)</label>
         </li>
-        <li>
-          <input type="checkbox" name="source" value="163" id="source_163"/>
-          <label for="source_163">网易云音乐(160kbps)</label>
-        </li>
       </ul>
       <div class="tip">
-        建议选择上所有来源，如果网络条件不佳，可尝试取消百度音乐<br/>
-        修改配置后你需要刷新豆瓣FM的页面来使改动生效
+        <p>
+        * 建议选择上所有来源
+        </p>
+        <p>
+        * 插件目前暂时不支持使用320k质量以下的音源，如果网络条件不佳，可暂时关闭插件<br/>
+        </p>
+        <p>
+        * 修改配置后你需要刷新豆瓣FM的页面来使改动生效
+        </p>
       </div>
       <script type="text/javascript" charset="utf-8" src="popup.js"></script>
     </body>

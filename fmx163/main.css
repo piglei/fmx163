@@ -46,24 +46,36 @@
     width: 269px;
 }
 
-#fmx163-player-icon {
+#fmx163-player-info {
     position: absolute;
     z-index: 9999;
     padding: 0;
     background-color: #434343;
     top: 229px;
     left: 50%;
-    margin-left: 324px;
-    width: 24px;
+    margin-left: 261px;
+    width: 84px;
     height: 30px;
+    line-height: 30px;
     padding: 0px 10px 0px 12px;
     border-top-left-radius: 6px;
     border-bottom-left-radius: 6px;
 }
-#fmx163-player-icon img {
+#fmx163-player-info img {
     margin-top: 4px;
     width: 22px;
     height: 22px;
+}
+#fmx163-player-info-icon {
+    float: left;
+}
+#fmx163-player-info-actions {
+    margin-left: 6px;
+    float: left;
+}
+#fmx163-player-info-actions a {
+    background-color: none;
+    color: white;
 }
 #fmx163-player-blocker {
     position: absolute;

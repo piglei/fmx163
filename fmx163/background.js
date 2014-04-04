@@ -23,7 +23,6 @@ var send_message_to_douban_tab = function(request) {
 var base_utils = {
     // Clean up an string, make it lower case and remove white spaces
     'clean_up_string': function(s) {
-        //result = s.toLowerCase().replace(/[\s'"]|\(.*\)|\[.*\]|\.\.\./g, '').replace(/[^\u4e00-\u9fa5a-z0-9]/g, '');
         result = s.toLowerCase().replace(/[\s'"']|\(.*\)|\[.*\]|\.\.\./g, '');
         return result;
     },
@@ -35,11 +34,48 @@ var base_utils = {
         if (s1.length > 3 && s2.indexOf(s1) !== -1) return true;
         if (s2.length > 3 && s1.indexOf(s2) !== -1) return true;
         return false;
+    },
+    'str_to_bytes': function(str) {
+        var bytes = [];
+        for (var i = 0; i < str.length; i++) {
+            bytes.push(str.charCodeAt(i)); 
+        }
+        return bytes;
+    },
+    'bytes_to_str': function(bytes) {
+        var str = '';
+        for (var i = 0; i < bytes.length; i++) {
+            str += String.fromCharCode(bytes[i]);
+        }
+        return str;
     }
 }
 
 
 var controller_163 = {
+    // Thanks WingGao:
+    // https://github.com/WingGao/DoubanQQFm/blob/master/MyDoubanFM/NetEase.cs#L115-L129
+    'encrypt_dfsid': function(dfsid) {
+        var dfsid = base_utils.str_to_bytes(String(dfsid));
+        var salt = base_utils.str_to_bytes('3go8&$8*3*3h0k(2)2');
+        var result = []
+        for (var i = 0; i < dfsid.length; i++) {
+            result.push(dfsid[i] ^ salt[i % salt.length]);
+        }
+        result = base_utils.bytes_to_str(result);
+        result = CryptoJS.MD5(result).toString(CryptoJS.enc.Base64);
+        return result.replace(/\//, '_').replace(/\+/, '-');
+    },
+    'get_song_url': function(song) {
+        var self = this;
+        info = song['hMusic'];
+        if (!info) {
+            return;
+        }
+        var dfsid = info['dfsId'];
+        var path = self.encrypt_dfsid(dfsid);
+        return 'http://m2.music.126.net/' + path + '/' + dfsid + '.' + info['extension'];
+    },
     // Query for song detail
     'get_song_detail': function(song_ids, callback) {
         $.getJSON(API_SONG_DETAIL, {
@@ -60,9 +96,12 @@ var controller_163 = {
             var song_ids = [];
             // Check fuzzy album name
             $.each(songs, function(i, item) {
-                if (base_utils.fuzzy_equal(item.album.name, song.album)) {
-                    song_ids.push(item.id);
-                }
+                $.each(item.artists, function(i, artist_item){
+                    if (base_utils.fuzzy_equal(artist_item.name, song.artist)) {
+                        song_ids.push(item.id);
+                        return false;
+                    }
+                });
             });
             if (song_ids.length === 0) {
                 callback && callback(null);
@@ -72,7 +111,9 @@ var controller_163 = {
             self.get_song_detail(song_ids, function(infos){
                 var matched_song_info;
                 $.each(infos, function(i, song_info) {
-                    var len = song_info['mMusic']['playTime'] / 1000;
+                    // Ignore music with now high quality file
+                    if (!song_info['bMusic']) return;
+                    var len = song_info['bMusic']['playTime'] / 1000;
 
                     console.log('Checking music length ', song['len'], len);
                     if (Math.abs(len - song['len']) <= SECONDS_JITTER) {
@@ -82,12 +123,21 @@ var controller_163 = {
                 });
 
                 if (matched_song_info) {
+                    // Update mp3Url key with a better one
+                    var kbps = 320;
+                    var mp3_url = self.get_song_url(matched_song_info);
+                    if (!mp3_url) {
+                        var kbps = 160;
+                        mp3_url = matched_song_info.mp3Url;
+                    }
+
                     callback && callback({
                         'source': '网易云音乐',
                         'name': matched_song_info.name,
                         'album': matched_song_info.album.name,
                         'artist': matched_song_info.artists[0].name,
-                        'mp3_url': matched_song_info.mp3Url,
+                        'mp3_url': mp3_url,
+                        'kbps': kbps,
                         'website': 'http://music.163.com/#/song?id=' + matched_song_info.id
                     });
                 } else {
@@ -164,14 +214,6 @@ var controller_baidu = {
                     return;
                 }
                 // No need to check here, we will check music length later
-                //
-                //var song_name = $.trim($(elem).find('span.song-title').text());
-                //var artist = $.trim($(elem).find('span.singer').text());
-                //var album = $.trim($(elem).find('span.album-title').text());
-                //album = album.slice(1, -1)
-                //console.log(song_name, song.song, base_utils.fuzzy_equal(song_name, song.song));
-                //console.log(artist, song.artist, base_utils.fuzzy_equal(artist, song.artist));
-                //console.log(album, song.album, base_utils.fuzzy_equal(album, song.album));
 
                 var song_item = $(elem).data('songitem');
                 song_ids.push(song_item.songItem.sid);
@@ -214,6 +256,7 @@ var controller_baidu = {
                         'album': matched_song_info.albumName,
                         'artist': matched_song_info.artistName,
                         'mp3_url': mp3_url,
+                        'kbps': 320,
                         'website': 'http://music.baidu.com/song/' + matched_song_info.songId
                     });
                 } else {

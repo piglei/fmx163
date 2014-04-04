@@ -1,6 +1,6 @@
-var SKEY_CONFIG = 'fmx163_config';
+var SKEY_CONFIG = 'fmx163_config_v2';
 var DEFAULT_CONFIG = {
-    'sources': ['baidu', '163'],
+    'sources': ['163', 'baidu'],
     'enabled': true,
     'volumn_tip_dismissed': false
 };

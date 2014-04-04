@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "高品质豆瓣FM",
-    "version": "2.0.1",
+    "version": "2.1.0",
     "description": "\"高品质豆瓣FM\"让你轻松享受高达320kbps高品质的豆瓣FM！",
     "icons": {
         "128": "icons/icon128.png",
@@ -23,7 +23,8 @@
         "webRequestBlocking"
     ],
     "background": {
-        "scripts": ["lib/json.js", "lib/jquery-2.0.3.min.js", "base.js", "background.js"],
+        "scripts": ["lib/json.js", "lib/jquery-2.0.3.min.js", "base.js", "lib/cryptojs/md5.js", 
+                    "lib/cryptojs/enc-base64-min.js", "background.js"],
         "persistent": true
     },
     "content_scripts": [{
