@@ -38,7 +38,7 @@
         old_is_paused = is_paused;
 
         // **Hack** setCurrentSongInfo function
-        if (typeof window.extStatusHandler !== 'undefined') {
+        if (typeof window.extStatusHandler !== 'undefined' && typeof window.__extStatusHandler === 'undefined') {
             window.__extStatusHandler = window.extStatusHandler;
             window.extStatusHandler = function(t) {
                 t = $.parseJSON(t);
