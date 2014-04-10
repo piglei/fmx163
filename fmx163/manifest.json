@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "高品质豆瓣FM",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "description": "\"高品质豆瓣FM\"让你轻松享受高达320kbps高品质的豆瓣FM！",
     "icons": {
         "128": "icons/icon128.png",

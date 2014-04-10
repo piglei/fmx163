@@ -12,7 +12,7 @@ function( config,   $){
     config.load_config(function(result){
         current_config = result;
         if (result.enabled) {
-            init();
+            main();
         }
     });
 
@@ -86,8 +86,8 @@ function( config,   $){
     }
 
 
-    // Init function of extension
-    var init = function() {
+    // main function of extension
+    var main = function() {
         $(function(){
             // Send init message
             chrome.runtime.sendMessage({type: 'fm_inited'});
@@ -137,6 +137,10 @@ function( config,   $){
             }, false);
 
             elem_audio.addEventListener('error', function(event){
+                // Return directly if already playing douban source
+                if (this.src.indexOf('douban') !== -1) {
+                    return
+                }
                 console.log('Error occurred when loading external source, play douban instead.');
                 play_douban_music(this.currentTime);
             }, false);
