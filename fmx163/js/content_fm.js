@@ -17,19 +17,25 @@ function( config,   $){
     });
 
     // Play mp3 by url
-    var play_mp3 = function(url) {
+    var play_mp3 = function(url, offset_seconds) {
         $('#download_mp3_file').data('href', url);
 
         $('#fmx163-player-audio').attr('src', url);
-        var audio = $('#fmx163-player-audio')[0]
+        var audio = $('#fmx163-player-audio')[0];
+        // Set offset time
+        if (offset_seconds) {
+            $('#fmx163-player-audio').one('loadedmetadata', function(){
+                $(this)[0].currentTime = offset_seconds;
+            });
+        }
         audio.play();
     }
 
     // Play douban
-    var play_douban_music = function() {
+    var play_douban_music = function(offset_seconds) {
         if (current_song) {
-            console.log('Playing mp3 from douban: ' + current_song.url);
-            play_mp3(current_song.url);
+            console.log('Playing mp3 from douban:', current_song.url, 'offset', offset_seconds);
+            play_mp3(current_song.url, offset_seconds);
             $('#player-info').attr('title', '正在播放豆瓣源');
             $('#fmx163-player-info-icon img').attr('src', icon_douban_url);
             $('#fmx163-player-info-icon a').attr('href', 'javascript:void(0)');
@@ -99,7 +105,7 @@ function( config,   $){
             });
 
             // Check config
-            if (current_config.volumn_tip_dismissed) {
+            if (!current_config.volumn_tip_dismissed) {
                 $("#fm-section").append('<div class="fmx163-tip fmx163-volumn-tip">请手动<strong>慢慢关闭豆瓣FM的音量</strong>，不然会出现"二重唱"哦' + 
                                         '<div style="text-align: center"><a href="javascript:void(0)">我知道了</a> | ' + 
                                         '<a href="javascript:void(0)" id="dismiss_tip">不再提醒</a></div>' +
@@ -126,17 +132,19 @@ function( config,   $){
             // Disable auto loop feature
             var elem_audio = $('#fmx163-player-audio')[0];
             elem_audio.addEventListener('ended', function(){
-                this.src = '';
+                this.currentTime = 0;
+                this.pause();
             }, false);
-            elem_audio.addEventListener('error', function(){
+
+            elem_audio.addEventListener('error', function(event){
                 console.log('Error occurred when loading external source, play douban instead.');
-                play_douban_music();
+                play_douban_music(this.currentTime);
             }, false);
 
             $('#download_mp3_file').bind('click', function(){
                 var href = $(this).data('href');
                 if (href) {
-                    alert('- 正在播放歌曲时文件不能正常下载，请在未播放时打开或者使用其他下载工具\n\n音乐文件地址:\n' + href);
+                    prompt('- 正在播放歌曲时文件不能正常下载，请在未播放时打开或者使用其他下载工具\n\n音乐文件地址:', href);
                 }
             });
 

@@ -31,7 +31,7 @@
         } catch(err) {
             var is_paused = false;
         }
-        if (old_is_paused !== true) {
+        if (is_paused !== old_is_paused) {
             var event_name = is_paused?'fmx163_player_pause':'fmx163_player_play';
             document.dispatchEvent(new CustomEvent(event_name));
         }
