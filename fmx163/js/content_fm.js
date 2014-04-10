@@ -6,11 +6,11 @@ function( config,   $){
     var icon_douban_url = chrome.extension.getURL('icons/icon_douban.ico');
     var icon_github = chrome.extension.getURL('icons/github_favicon.ico');
     var music_source = '163';
-    var config;
+    var current_config;
 
     // Check if extension has been disabled
     config.load_config(function(result){
-        config = result;
+        current_config = result;
         if (result.enabled) {
             init();
         }
@@ -99,7 +99,7 @@ function( config,   $){
             });
 
             // Check config
-            if (!config.volumn_tip_dismissed) {
+            if (current_config.volumn_tip_dismissed) {
                 $("#fm-section").append('<div class="fmx163-tip fmx163-volumn-tip">请手动<strong>慢慢关闭豆瓣FM的音量</strong>，不然会出现"二重唱"哦' + 
                                         '<div style="text-align: center"><a href="javascript:void(0)">我知道了</a> | ' + 
                                         '<a href="javascript:void(0)" id="dismiss_tip">不再提醒</a></div>' +

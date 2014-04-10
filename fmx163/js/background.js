@@ -53,15 +53,15 @@ var SOURCE_CONTROLLERS = {
 
 
 var refresh_config = function() {
-    config.load_config(function(config){
-        ENABLED_SOURCES = config.sources;
+    config.load_config(function(current_config){
+        ENABLED_SOURCES = current_config.sources;
         ENABLED_SOURCES.push('douban');
     });
 }
 
 
-config.load_config(function(config){
-    ENABLED_SOURCES = config.sources;
+config.load_config(function(current_config){
+    ENABLED_SOURCES = current_config.sources;
     ENABLED_SOURCES.push('douban');
     listen_events();
 });
