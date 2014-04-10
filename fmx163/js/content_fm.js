@@ -1,7 +1,6 @@
-// Author: piglei <piglei2007@gmail.com>
-// Date: 2014-01-07
+require(['config', 'jquery'],
+function( config,   $){
 
-(function(){
     var current_song;
     var icon_default_url = chrome.extension.getURL('icons/icon32.png');
     var icon_douban_url = chrome.extension.getURL('icons/icon_douban.ico');
@@ -10,7 +9,7 @@
     var config;
 
     // Check if extension has been disabled
-    config_utils.load_config(function(result){
+    config.load_config(function(result){
         config = result;
         if (result.enabled) {
             init();
@@ -55,7 +54,7 @@
 
     // Embed e_fm.js
     var s = document.createElement('script');
-    s.src = chrome.extension.getURL('e_fm.js');
+    s.src = chrome.extension.getURL('js/embedded_fm.js');
     (document.head||document.documentElement).appendChild(s);
     s.onload = function() {
         s.parentNode.removeChild(s);
@@ -148,8 +147,9 @@
             $('.fmx163-volumn-tip a').bind('click', function(){$('.fmx163-volumn-tip').remove()});
             $('.fmx163-volumn-tip #dismiss_tip').bind('click', function(){
                 $('.fmx163-volumn-tip').remove();
-                config_utils.update({'volumn_tip_dismissed': true});
+                config.update({'volumn_tip_dismissed': true});
             });
         });
     }
-})()
+
+}); 

@@ -23,18 +23,18 @@
         "webRequestBlocking"
     ],
     "background": {
-        "scripts": ["lib/json.js", "lib/jquery-2.0.3.min.js", "base.js", "lib/cryptojs/md5.js", 
-                    "lib/cryptojs/enc-base64-min.js", "background.js"],
+        "scripts": ["js/lib/require.js", "js/require_config.js", "js/background.js"],
         "persistent": true
     },
     "content_scripts": [{
-        "css": ["main.css"],
-        "js": ["lib/json.js", "lib/jquery-2.0.3.min.js", "base.js", "c_fm.js"],
+        "css": ["css/main.css"],
+        "js": ["js/lib/require.js", "js/require_config.js", "js/require_content.js",
+               "js/content_fm.js"],
         "matches": ["http://douban.fm/", "http://douban.fm/?*"]
     }],
-    "web_accessible_resources": ["e_fm.js", "icons/*"],
+    "web_accessible_resources": ["icons/*", "js/*"],
     "browser_action": {
         "default_icon": "icons/icon32.png",
-        "default_popup": "popup.html"
+        "default_popup": "html/popup.html"
     }
 }

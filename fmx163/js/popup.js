@@ -1,6 +1,8 @@
-(function(){
+require(['config', 'jquery'],
+function( config,   $){
+
     var current_config;
-    config_utils.load_config(function(config){
+    config.load_config(function(config){
         $.each(config.sources, function(i, item){
             $('input[value="' + item + '"]').attr('checked', 'true');
         });
@@ -19,13 +21,14 @@
             sources.push($(elem).val());
         });
         current_config['sources'] = sources;
-        config_utils.save_config(current_config);
+        config.save_config(current_config);
     });
     $('select[name="enabled"]').bind('change', function(){
         var enabled = true;
         if ($('select[name="enabled"]').val() === 'off') enabled = false;
         current_config['enabled'] = enabled;
-        config_utils.save_config(current_config);
+        config.save_config(current_config);
     });
-})(); 
+
+}); 
 
