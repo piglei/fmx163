@@ -111,12 +111,11 @@ return {
                 callback && callback(null);
             },
             success: function(resp) {
-                success_callback(resp);
-                //try {
-                //    success_callback(resp);
-                //} catch(err) {
-                //    callback && callback(null);
-                //}
+                try {
+                    success_callback(resp);
+                } catch(err) {
+                    callback && callback(null);
+                }
             }
         });
     }
