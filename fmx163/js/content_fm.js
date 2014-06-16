@@ -5,6 +5,7 @@ function( config,   $){
     var icon_default_url = chrome.extension.getURL('icons/icon32.png');
     var icon_douban_url = chrome.extension.getURL('icons/icon_douban.ico');
     var icon_github = chrome.extension.getURL('icons/github_favicon.ico');
+    var qr_alipay_piglei = chrome.extension.getURL('icons/qr_alipay_piglei.png');
     var music_source = '163';
     var current_config;
 
@@ -112,11 +113,12 @@ function( config,   $){
                                         '<div class="arrow-up"></div></div>');
             }
 
-            $("#fm-section").append('<div class="fmx163-tip fmx163-about">本插件仅供学习交流使用' + 
-                                     '<div class="div-fork"><a href="https://github.com/piglei/fmx163" target="_blank">Fork me on <img src="' + icon_github + '" /></a></div><br>' +
-                                     '如果在播放过程频繁遇到卡顿问题，请点击地址栏右侧的插件图标尝试修改配置<br/>' + 
-                                     '<a href="http://me.alipay.com/piglei" target="_blank">请作者喝杯咖啡</a> ' +
+            $("#fm-section").append('<div class="fmx163-tip fmx163-about"><img class="icon-small" src="' + icon_default_url + '" /> | ' + 
+                                     '<a id="buy-me-a-coffee" href="javascript:void(0)" target="_blank">请作者喝杯咖啡</a>' + 
+                                     '<div id="div-qr-alipay"><img src="' + qr_alipay_piglei +' " />' +
+                                     '<br/>谢谢你 :) <br/>请使用支付宝钱包来扫描<br/>我的付款二维码</div> ' +
                                      '| <a href="http://www.zlovezl.cn/articles/fmx163-released/" target="_blank">联系作者</a>' + 
+                                     '<div class="div-fork"><iframe src="http://ghbtns.com/github-btn.html?user=piglei&repo=fmx163&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe></div><br>' +
                                      '<div class="wrapper-jiathis"><div style="float: left; margin-right: 8px;">分享插件: </div><div class="jiathis_style"><a class="jiathis_button_qzone"></a> <a class="jiathis_button_tsina"></a> <a class="jiathis_button_tqq"></a> <a class="jiathis_button_weixin"></a> <a class="jiathis_button_renren"></a> <a class="jiathis_button_xiaoyou"></a> <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a> <a class="jiathis_counter_style"></a> </div></div>' + 
                                      '<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1375626758367242" charset="utf-8"></script>' + 
                                      '</div>');
@@ -161,6 +163,12 @@ function( config,   $){
                 $('.fmx163-volumn-tip').remove();
                 config.update({'volumn_tip_dismissed': true});
             });
+            // Show/hide QR code
+            $('#buy-me-a-coffee').hover(function(){
+                $('#div-qr-alipay').fadeIn();
+            }, function(){
+                $('#div-qr-alipay').fadeOut();
+            })
         });
     }
 

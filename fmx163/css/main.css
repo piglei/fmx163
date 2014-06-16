@@ -20,7 +20,7 @@
     margin-left: -59px;
     padding: 6px;
     background-color: white;
-    width: 320px;
+    width: 300px;
 }
 .arrow-up {
     position: absolute;
@@ -91,14 +91,28 @@
 }
 .div-fork {
     float: right;
-    text-decoration: underline;
-}
-.div-fork img {
-    width: 12px;
-    height: 12px;
+    padding-left: 4px;
 }
 .wrapper-jiathis {
     padding-top: 4px;
     margin-top: 4px;
     border-top: 1px solid #f4f4f4;
+}
+.icon-small {
+    height: 18px;
+    width: 18px;
+    vertical-align:middle;
+}
+#buy-me-a-coffee {
+    position: replative;
+}
+#div-qr-alipay {
+    position: absolute;
+    background-color: white;
+    left: -4px;
+    top: -270px;
+    padding: 8px;
+    height: 250px;
+    border: 1px solid #999;
+    display: none;
 }
