@@ -25,6 +25,11 @@ CRX地址: https://github.com/piglei/fmx163/raw/master/releases/fmx163_latest.cr
 CHANGES
 -------
 
+Version 2.1.4 (2015-02-28)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- 修复Issues
+
 Version 2.1.0 (2014-04-04)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

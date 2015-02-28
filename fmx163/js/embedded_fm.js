@@ -41,9 +41,9 @@
         if (typeof window.extStatusHandler !== 'undefined' && typeof window.__extStatusHandler === 'undefined') {
             window.__extStatusHandler = window.extStatusHandler;
             window.extStatusHandler = function(t) {
-                t = $.parseJSON(t);
-                if (typeof t.song !== 'undefined') {
-                    current_song = t.song;
+                parsed_t = $.parseJSON(t);
+                if (typeof parsed_t.song !== 'undefined') {
+                    current_song = parsed_t.song;
                 }
                 return window.__extStatusHandler(t);
             }
