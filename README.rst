@@ -25,6 +25,11 @@ CRX地址: https://github.com/piglei/fmx163/raw/master/releases/fmx163_latest.cr
 CHANGES
 -------
 
+Version 2.1.5 (2016-03-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- 修复由于豆瓣新增 CSP header 导致外部音源加载失败问题
+
 Version 2.1.4 (2015-02-28)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
