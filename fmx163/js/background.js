@@ -104,4 +104,20 @@ $.each(sites_need_spoot_referrer, function(i, obj){
     );
 });
 
+
+// Modify CSP header for douban.fm
+chrome.webRequest.onHeadersReceived.addListener(function(details) {
+        $.each(details.responseHeaders, function(i, header){
+            if (header.name.toLowerCase()=== 'content-security-policy') {
+                header.value += ' *.126.net *.163.com 119.75.215.114';
+            }
+        });
+        return { // Return the new HTTP header
+            responseHeaders: details.responseHeaders
+        };
+    }, 
+    {urls: ["*://douban.fm/"]}, 
+    ["blocking", "responseHeaders"]
+);
+
 });
