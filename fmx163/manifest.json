@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "高品质豆瓣FM",
-    "version": "2.1.5",
+    "version": "2.1.6",
     "description": "\"高品质豆瓣FM\"让你轻松享受高达320kbps高品质的豆瓣FM！",
     "icons": {
         "128": "icons/icon128.png",
@@ -31,7 +31,7 @@
         "css": ["css/main.css"],
         "js": ["js/lib/require.js", "js/require_config.js", "js/require_content.js",
                "js/content_fm.js"],
-        "matches": ["http://douban.fm/", "http://douban.fm/?*"]
+        "matches": ["*://douban.fm/", "*://douban.fm/?*"]
     }],
     "web_accessible_resources": ["icons/*", "js/*"],
     "browser_action": {

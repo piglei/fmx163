@@ -25,6 +25,11 @@ CRX地址: https://github.com/piglei/fmx163/raw/master/releases/fmx163_latest.cr
 CHANGES
 -------
 
+Version 2.1.6 (2016-05-15)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- 修复由于豆瓣FM 切换到 https 导致插件无法加载的问题
+
 Version 2.1.5 (2016-03-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
